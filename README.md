@@ -12,7 +12,7 @@ Install the following programs:
 ### Mac OS X Notes
 Some of these programs can be installed easily on OS X with [Macports](https://www.macports.org/). Others, such as ffmpeg2theora, can be moved directly from the ~/Downloads folder to /usr/local/bin/ or /opt/local/bin/ using `mv ffmpeg2theora.macosx /opt/local/bin/`.  
 
-`oggfwd` can be easily compiled on OS X by changing a few parameters in the `make` file.  First, install `libshout`, `libtheora`, `libogg`, and `libvorbis` via MacPorts.  Then, simply change the prefix for the library from `/usr/` to `/opt/local/`.  This should built a binary that can be dropped in /opt/local/bin just as ffmpeg2theora.macosx was.
+`oggfwd` can be easily compiled on OS X by changing a few parameters in the `make` file.  First, install `libshout`, `libtheora`, `libogg`, and `libvorbis` via MacPorts.  Then, simply change the prefix for the library from `/usr/` to `/opt/local/`.  This should build a binary that can be dropped in /opt/local/bin just as ffmpeg2theora.macosx was.
 
 ### Linux
 I haven't directly installed the prerequisites under Linux yet, but I'm sure most can be found using `apt-cache search` or `yum search`, depending on whether you're using Ubuntu or Fedora, respectively.

@@ -23,11 +23,15 @@ case $yn in
 esac
 
 function vlc (){
+	clear
 	if "$(uname -s)" == 'Darwin':
 		VLC='/Applications/VLC.app/Contents/MacOS/VLC'
-		type $VLC >/dev/null 2>&1 || { echo >&2 "I require VLC but it's not installed.  Aborting."; exit 1; }
+		type $VLC >/dev/null 2>&1 || { 
+		echo >&2 "I require VLC but it's not installed.  Aborting."; exit 1; 
+	}
 	else:
 		VLC="$(type -P vlc)"
+	fi
 
 	VLC "$MOVIE" \
 		-I \
@@ -53,9 +57,28 @@ function ffmpeg (){
 	ICECAST="$(type -P icecast)"
 	$ICECAST -b -c /opt/local/etc/icecast.xml &
 	icepid=$!
+	if "$(uname -s)" == 'Darwin':
+		if ! type -P ffmpeg2theora.macosx; then
+			echo >&2 "Can't find ffmpeg2theora.  Aborting."
+			exit 1
+		else:
+			FFMPEG="$(type -P ffmpeg2theora.macosx)"
+		fi
+	else:
+		if ! type -P ffmpeg2theora; then
+			echo >&2 "Can't find ffmpeg2theora.  Aborting."
+			exit 1
+		else:
+			FFMPEG="$(type -P ffmpeg2theora)"
+		fi
+	fi
 
-	FFMPEG="$(type -P ffmpeg2theora.macosx)"
-	OGGFWD="$(type -P oggfwd)"
+	if ! type -P oggfwd; then
+		echo >&2 "Can't find oggfwd.  Aborting."
+		exit 1
+	else:
+		OGGFWD="$(type -P oggfwd)"
+	fi
 
 	"$FFMPEG" "$MOVIE" \
 		-a 0 \
