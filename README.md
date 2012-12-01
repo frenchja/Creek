@@ -31,3 +31,17 @@ chmod +x stream.sh && mv stream.sh /usr/local/bin/
   - Playlist feature for ffmpeg2theora option in BASH.
   - Utilize VLC's [web interface](http://wiki.videolan.org/Documentation:Modules/http_intf).
   - Video codec choices (e.g., [Theora](http://www.theora.org/) vs. [x264](http://www.videolan.org/developers/x264.html) vs. [VP8](http://www.webmproject.org/))
+
+## License Information
+Any program in the north-american-playground repo is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or 
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see [http://www.gnu.org/licenses/].

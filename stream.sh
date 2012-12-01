@@ -3,8 +3,21 @@
 # 	ffmpeg2theora:  http://firefogg.org/nightly/
 # 	icecast:  http://www.icecast.org/download.php
 # 	oggfwd:  http://v2v.cc/~j/oggfwd/
-
-# Works under Mac OS X & Linux
+#
+# Copyright 2012 - 2013.
+#
+# stream.sh is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# stream.sh is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with stream.sh.  If not, see <http://www.gnu.org/licenses/>.
 
 #[ "$#" -eq 1 ] || echo "You must provide a movie parameter after stream.sh!" && exit 0
 
