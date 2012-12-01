@@ -25,11 +25,13 @@ esac
 function vlc (){
 	if "$(uname -s)" == 'Darwin':
 		VLC='/Applications/VLC.app/Contents/MacOS/VLC'
+		type $VLC >/dev/null 2>&1 || { echo >&2 "I require VLC but it's not installed.  Aborting."; exit 1; }
 	else:
 		VLC="$(type -P vlc)"
-	VLC "$MOVIE" \
-		--sout="#transcode{vcodec=x264{bframes=5},vb=256,scale=0.67,acodec=aac,ab=32,channels=1,audio-sync=1,fps=15,}:standard{access=http,mux=ts,dst='http://$HOSTNAME:8000'}"
 
+	VLC "$MOVIE" \
+		-I \
+		--sout="#transcode{vcodec=x264{bframes=5},vb=256,scale=0.67,acodec=aac,ab=32,channels=1,audio-sync=1,fps=15,}:standard{access=http,mux=ts,dst='http://$HOSTNAME:8000'}"
 	vlcid=$!
 	wait
 	kill $vlcid
@@ -43,7 +45,7 @@ function ffmpeg (){
 	clear
 	echo "================================="
 	echo "Playing $(basename "$MOVIE") at:"
-	echo "http:$HOSTNAME:8000/mst3k.ogg"
+	echo "http://$HOSTNAME:8000/mst3k.ogg"
 	echo
 	echo "Press Ctrl+c to exit at any time."
 	echo "================================="
@@ -84,9 +86,9 @@ menu (){
 	echo "There are two ways of streaming:"
 	echo "1)  Using Icecast, ffmpeg2theora, and oggfwd."
 	echo "2)  Using VLC."
-	echo ""
+	echo 
 	echo "Q)  Quit."
-	echo ""
+	echo 
 	read -p "Which would you like to try? " s
 
 	case "$s" in
@@ -95,7 +97,7 @@ menu (){
 		2 )
 			read -p "Not implemented yet.  Choose 1!"
 			menu ;;
-		Q|q|Quit|quit )
+		Q|q|Quit|quit|exit )
 			exit 1 ;;
 		* )
 			echo "Invalid choice!"
