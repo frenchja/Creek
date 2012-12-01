@@ -1,7 +1,7 @@
 # README
 This is a small script that I use stream video content to friends.  I originally wrote it in BASH, although I will soon port it to Python to for Windows users.  Even so, I'll try as best as possible to debug and add features to the BASH version as it's a fairly quick and painless language for me to write in.
 
-## Instructions for stream.sh
+## Prerequisites
 Install the following programs:
 
   - [VLC](http://www.videolan.org/index.html)
@@ -18,8 +18,13 @@ Some of these programs can be installed easily on OS X with [Macports](https://w
 I haven't directly installed the prerequisites under Linux yet, but I'm sure most can be found using `apt-cache search` or `yum search`, depending on whether you're using Ubuntu or Fedora, respectively.
 
 ## Configuration
-
 First, set the password on line 72 to match whatever is in your icecast.xml file. Second, you may want to edit the website on line 70 to match your own. 
+
+## Installation
+```bash
+chmod +x stream.sh && mv stream.sh /usr/local/bin/
+```
+
 
 ## Features to Add
   - More robust error handling.
