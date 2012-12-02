@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 # Install List:
 # 	ffmpeg2theora:  http://firefogg.org/nightly/
 # 	icecast:  http://www.icecast.org/download.php
@@ -19,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with stream.sh.  If not, see <http://www.gnu.org/licenses/>.
 
-#[ "$#" -eq 1 ] || echo "You must provide a movie parameter after stream.sh!" && exit 0
+[ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" && exit 0 }
 
 MOVIE=$1
 HOSTNAME="$(hostname)"
@@ -105,7 +106,7 @@ function ffmpeg (){
 		--artist "$(users)" \
 		--title "$(basename "$MOVIE")" \
 		--date "$(date +%Y-%m-%d)" \
-		--organization "http://mst3k.nofadz.com/chat/" \
+		--organization "http://website.com" \
 		-o /dev/stdout - | \
 		$OGGFWD $(hostname) 8000 password /mst3k.ogg
 	oggpid=$!
