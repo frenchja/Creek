@@ -20,31 +20,44 @@
 # You should have received a copy of the GNU General Public License
 # along with stream.sh.  If not, see <http://www.gnu.org/licenses/>.
 
-[ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" && exit 0 }
-
+set -e
 MOVIE=$1
 HOSTNAME="$(hostname)"
+exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
+
+# Doesn't work...
+# [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
+
 clear
 echo "Your hostname appears to be $(hostname)."
 echo "Users will need to connect to this."
-echo
+echo ""
 read -p "Is this correct? " yn
 case $yn in
 	Y|y|Yes|yes)
 		break ;;
 	*)
-		read -p "Enter your hostname: " hostname;;
+		read -p "Enter your hostname: " HOSTNAME;;
 esac
+
+function icepass (){
+	clear
+	echo "Please enter the password for the Icecast server"
+	echo ""
+	read -p ": " PASSWORD
+	export PASSWORD
+}
 
 function vlc (){
 	clear
-	if "$(uname -s)" == 'Darwin':
+	if "$(uname -s)" == 'Darwin'; then
 		VLC='/Applications/VLC.app/Contents/MacOS/VLC'
 		type $VLC >/dev/null 2>&1 || { 
-		echo >&2 "I require VLC but it's not installed.  Aborting."; exit 1; 
+		echo "I require VLC but it's not installed.  Aborting." 1>&2; exit 0; 
 	}
-	else:
+	else
 		VLC="$(type -P vlc)"
+	
 	fi
 
 	VLC "$MOVIE" \
@@ -71,26 +84,28 @@ function ffmpeg (){
 	ICECAST="$(type -P icecast)"
 	$ICECAST -b -c /opt/local/etc/icecast.xml &
 	icepid=$!
-	if "$(uname -s)" == 'Darwin':
+	icepass
+	
+	if "$(uname -s)" == 'Darwin'; then
 		if ! type -P ffmpeg2theora.macosx; then
 			echo >&2 "Can't find ffmpeg2theora.  Aborting."
-			exit 1
-		else:
+			exit 0
+		else
 			FFMPEG="$(type -P ffmpeg2theora.macosx)"
 		fi
-	else:
+	else
 		if ! type -P ffmpeg2theora; then
 			echo >&2 "Can't find ffmpeg2theora.  Aborting."
-			exit 1
-		else:
+			exit 0
+		else
 			FFMPEG="$(type -P ffmpeg2theora)"
 		fi
 	fi
 
 	if ! type -P oggfwd; then
 		echo >&2 "Can't find oggfwd.  Aborting."
-		exit 1
-	else:
+		exit 0
+	else
 		OGGFWD="$(type -P oggfwd)"
 	fi
 
@@ -108,7 +123,7 @@ function ffmpeg (){
 		--date "$(date +%Y-%m-%d)" \
 		--organization "http://website.com" \
 		-o /dev/stdout - | \
-		$OGGFWD $(hostname) 8000 password /mst3k.ogg
+		$OGGFWD "$HOSTNAME" 8000 "$PASSWORD" /mst3k.ogg
 	oggpid=$!
 	
 	wait
@@ -138,7 +153,7 @@ menu (){
 			exit 1 ;;
 		* )
 			echo "Invalid choice!"
-                        	menu ;;
+            menu ;;
 	esac
 
 	wait 

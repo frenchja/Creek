@@ -18,7 +18,7 @@ Some of these programs can be installed easily on OS X with [Macports](https://w
 I haven't directly installed the prerequisites under Linux yet, but I'm sure most can be found using `apt-cache search` or `yum search`, depending on whether you're using Ubuntu or Fedora, respectively.
 
 ## Configuration
-First, set the password on line 72 to match whatever is in your icecast.xml file. Second, you may want to edit the website on line 70 to match your own. 
+First, set the password to match whatever is in your icecast.xml file. Second, you may want to edit the website to match your own. 
 
 ## Installation
 ```bash
