@@ -22,6 +22,7 @@ First, set the password to match whatever is in your icecast.xml file. Second, y
 
 ## Installation
 ```bash
+curl -O https://raw.github.com/frenchja/north-american-playground/master/stream.sh &&
 chmod +x stream.sh && mv stream.sh /usr/local/bin/
 ```
 
