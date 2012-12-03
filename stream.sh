@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Install List:
 #   ffmpeg2theora:  http://firefogg.org/nightly/
@@ -97,15 +97,15 @@ function vlc (){
 
 function ffmpeg (){
     icepass
-    clear
-    echo "================================="
-    echo "Playing $(basename "$MOVIE") at:"
-    echo "http://$HOSTNAME:8000/mst3k.ogg"
-    echo
-    echo "Press Ctrl+c to exit at any time."
-    echo "================================="
-    echo
-    ICECAST="$(type -P icecast)"
+   
+    if ! type -P icecast; then
+            echo >&2 "Can't find icecast.  Aborting."
+            exit 0
+        else
+            ICECAST="$(type -P icecast)"
+            export ICECAST
+        fi
+    
     $ICECAST -b -c /opt/local/etc/icecast.xml &
     icepid=$!
     
@@ -135,6 +135,15 @@ function ffmpeg (){
         OGGFWD="$(type -P oggfwd)"
         export OGGFWD
     fi
+
+    clear
+    echo "================================="
+    echo "Playing $(basename "$MOVIE") at:"
+    echo "http://$HOSTNAME:8000/mst3k.ogg"
+    echo
+    echo "Press Ctrl+c to exit at any time."
+    echo "================================="
+    echo
 
     $FFMPEG "$MOVIE" \
         -a 0 \
