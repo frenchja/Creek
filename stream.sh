@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # Install List:
 #   ffmpeg2theora:  http://firefogg.org/nightly/
@@ -23,24 +23,32 @@
 set -e
 MOVIE=$1
 HOSTNAME="$(hostname)"
+IP="$(curl http://automation.whatismyip.com/n09230945.asp)"
 exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 
 # Doesn't work...
 # [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
 
 clear
-echo "Your hostname appears to be $(hostname)."
+echo "Your hostname appears to be $HOSTNAME."
 echo "Users will need to connect to this."
 echo ""
 echo -n "Is this correct? "
 read yn
 
 case $yn in
-    Y|y|Yes|yes)
+    Y|y|Yes|yes|YES)
         break ;;
     *)
-        read -p "Enter your hostname: " HOSTNAME;;
+        echo -n "Enter your hostname or IP: "
+        read HOSTNAME ;;
 esac
+
+clear
+echo "What website do you want to include in the Metadata?"
+echo "This could be an IRC channel or forum..."
+echo -n ": "
+read WEBSITE
 
 function icepass (){
     clear
@@ -139,7 +147,7 @@ function ffmpeg (){
     clear
     echo "================================="
     echo "Playing $(basename "$MOVIE") at:"
-    echo "http://$HOSTNAME:8000/mst3k.ogg"
+    echo "http://$IP:8000/movie.ogg"
     echo
     echo "Press Ctrl+c to exit at any time."
     echo "================================="
@@ -157,9 +165,9 @@ function ffmpeg (){
         --artist "$(users)" \
         --title "$(basename "$MOVIE")" \
         --date "$(date +%Y-%m-%d)" \
-        --organization "http://website.com" \
+        --organization "$WEBSITE" \
         -o /dev/stdout - | \
-        $OGGFWD "$HOSTNAME" 8000 "$PASSWORD" /mst3k.ogg
+        $OGGFWD "$HOSTNAME" 8000 "$PASSWORD" /movie.ogg
     oggpid=$!
     
     wait
@@ -177,13 +185,15 @@ menu (){
     echo 
     echo "Q)  Quit."
     echo 
-    read -p "Which would you like to try? " s
+    echo -n "Which would you like to try? "
+    read s
 
     case "$s" in
         1 )
             ffmpeg ;;
         2 )
-            read -p "Not implemented yet.  Choose 1!"
+            echo -n "Not implemented yet.  Choose 1!"
+            read
             menu ;;
         Q|q|Quit|quit|exit )
             exit 1 ;;
