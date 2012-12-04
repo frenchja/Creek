@@ -69,6 +69,7 @@ function icepass (){
             ;;
         2)
             echo "What's the hostname or IP address?"
+            echo
             echo -n ": "
             read HOSTNAME
             ;;
@@ -109,10 +110,10 @@ function ffmpeg (){
     if ! type -P icecast; then
             echo >&2 "Can't find icecast.  Aborting."
             exit 0
-        else
+    else
             ICECAST="$(type -P icecast)"
             export ICECAST
-        fi
+     fi
     
     $ICECAST -b -c /opt/local/etc/icecast.xml &
     icepid=$!
