@@ -1,5 +1,5 @@
 # README
-This is a small script that I use stream video content to friends.  I originally wrote it in [BASH](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29), although I will soon port it to Python for Windows users.  Even so, I'll try as best as possible to debug and add features to the BASH version as it's a fairly quick and painless language for me to write in.
+Creek is a small script that I use stream video content to friends.  I originally wrote it in [BASH](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29), although I will soon port it to Python for Windows users.  Even so, I'll try as best as possible to debug and add features to the BASH version as it's a fairly quick and painless language for me to write in.
 
 I noticed that transcoding and streaming movies to friends was a pain for the average user.  There are multiple guides for Icecast, Shoutcast, and VLC.  I'm writing the programs in this repo to help ease the burder.  However, right now they're all text/Terminal programs.  In time, I hope to lower the barrier to entry using [GUIs](https://en.wikipedia.org/wiki/Graphical_user_interface) so that the average user can broadcast copyright-free material (e.g., [Archive.org](https://archive.org/details/SciFi_Horror)) easily to friends on the fly.
 
