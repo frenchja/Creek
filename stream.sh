@@ -200,8 +200,8 @@ function bitTorrent() {
 
         case $bitTorrentStore in
             Y|y|Yes|yes|YES)
-                echo 'torrentServer: $torrentServer' > ~/.creek
-                echo 'streamKey: $streamKey' >> ~/.creek
+                echo '$torrentServer $torrentServer' > ~/.creek
+                echo '$torrentServer $streamKey' >> ~/.creek
                 ;;
             N|n|No|no|NO)
                 ;;
@@ -225,7 +225,7 @@ function bitTorrent() {
 
     # Implement directory and file type check
     # Should parse basename or directory here
-    for f in *.mp4; do
+    for f in for f in $(ls *.mp4 | sort -r); do
         $FFMPEG -re -i "$f" \
             -c copy \
             -f flv \
@@ -269,5 +269,4 @@ menu (){
     wait 
     exit 1
 }
-
 menu
