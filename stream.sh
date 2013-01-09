@@ -1,10 +1,11 @@
 #!/bin/bash
-#
+
 # Install List:
 #   ffmpeg2theora:  http://firefogg.org/nightly/
 #   icecast:  http://www.icecast.org/download.php
 #   oggfwd:  http://v2v.cc/~j/oggfwd/
-#
+#   ffmpeg
+
 # Copyright 2012 - 2013.
 #
 # Creek is free software: you can redistribute it and/or modify
@@ -26,9 +27,15 @@ HOSTNAME="$(hostname)"
 IP="$(curl http://automation.whatismyip.com/n09230945.asp)"
 exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 
+# Check parameter passed
+usage(){
+    echo "USAGE: ./stream.sh movie"
+}
 
-# Doesn't work...
-# [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
+if [ -z "$MOVIE" ]; then
+    usage
+    exit 0
+fi
 
 clear
 echo "Your hostname appears to be $HOSTNAME."
@@ -108,6 +115,7 @@ function vlc (){
 function ffmpeg (){
     icepass
    
+    # Find icecast
     if ! type -P icecast; then
             echo >&2 "Can't find icecast.  Aborting."
             exit 0
@@ -115,10 +123,10 @@ function ffmpeg (){
             ICECAST="$(type -P icecast)"
             export ICECAST
      fi
-    
     $ICECAST -b -c /opt/local/etc/icecast.xml &
     icepid=$!
     
+    # Find ffmpeg2theora
     unamestr=`uname`
     if [[ "$unamestr" == 'Darwin' ]]; then
         if ! type -P ffmpeg2theora.macosx; then
@@ -138,12 +146,18 @@ function ffmpeg (){
         fi
     fi
 
+    # Find oggfwd
     if ! type -P oggfwd; then
         echo >&2 "Can't find oggfwd.  Aborting."
         exit 0
     else
         OGGFWD="$(type -P oggfwd)"
         export OGGFWD
+    fi
+
+    if [[ -d $MOVIE ]]; then
+        echo >&2 "Directories not yet supported here.  Aborting."
+        exit 1
     fi
 
     clear
@@ -215,6 +229,8 @@ function bitTorrent() {
     bitTorrentStore
 
     unset FFMPEG
+
+    # Find ffmpeg
     if ! type -P ffmpeg; then
         echo >&2 "Can't find ffmpeg.  Aborting."
         exit 1
@@ -225,13 +241,12 @@ function bitTorrent() {
 
     # Implement directory and file type check
     # Should parse basename or directory here
-    for f in for f in $(ls *.mp4 | sort -r); do
+    for f in $(ls *.mp4 | sort -R); do
         $FFMPEG -re -i "$f" \
             -c copy \
             -f flv \
             rtmp://'$torrentServer'/'$streamKey'
     done
-    
 }
 
 menu (){
