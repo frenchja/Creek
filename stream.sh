@@ -31,17 +31,16 @@ exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 usage(){
     echo "USAGE: ./stream.sh movie"
 }
-
 if [ -z "$MOVIE" ]; then
     usage
-    exit 0
+    exit 1
 fi
 
 clear
 echo "Your hostname appears to be $HOSTNAME."
 echo "Users will need to connect to this."
 echo ""
-echo -n "Is this correct? "
+echo -n "Is this correct?  (Y/N)"
 read yn
 
 case $yn in
@@ -94,7 +93,7 @@ function vlc (){
     if "$(uname -s)" == 'Darwin'; then
         VLC='/Applications/VLC.app/Contents/MacOS/VLC'
         type $VLC >/dev/null 2>&1 || { 
-        echo "I require VLC but it's not installed.  Aborting." 1>&2; exit 0; 
+        echo "I require VLC but it's not installed.  Aborting." 1>&2; exit 0 
     }
     else
         VLC="$(type -P vlc)"
@@ -198,6 +197,10 @@ function bitTorrent() {
     echo "You've chosen to use BitTorrent Live RTMP streaming!"
     echo "If you haven't already, sign up at http://live.bittorrent.com/"
     echo
+
+    if 
+        # Check for ~/.creek values 
+    fi
     echo "Please enter your BitTorrent Live server address (e.g., rtmp://...)"
     echo -n ": "
     read torrentServer
@@ -252,11 +255,11 @@ function bitTorrent() {
 menu (){
     clear
     echo "There are three ways of streaming:"
-    echo "1)  Using Icecast, ffmpeg2theora, and oggfwd."
-    echo "2)  Using VLC (i.e., http video)."
-    echo "3)  BitTorrent Live (i.e., RTMP Server)."
+    echo "  1)  Using Icecast, ffmpeg2theora, and oggfwd."
+    echo "  2)  Using VLC (i.e., http video)."
+    echo "  3)  BitTorrent Live (i.e., RTMP Server)."
     echo 
-    echo "Q)  Quit."
+    echo "  Q)  Quit."
     echo 
     echo -n "Which would you like to try? "
     read s
