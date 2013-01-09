@@ -26,6 +26,7 @@ HOSTNAME="$(hostname)"
 IP="$(curl http://automation.whatismyip.com/n09230945.asp)"
 exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 
+
 # Doesn't work...
 # [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
 
@@ -178,11 +179,67 @@ function ffmpeg (){
     exit 1
 }
 
+function bitTorrent() {
+    clear
+    echo "You've chosen to use BitTorrent Live RTMP streaming!"
+    echo "If you haven't already, sign up at http://live.bittorrent.com/"
+    echo
+    echo "Please enter your BitTorrent Live server address (e.g., rtmp://...)"
+    echo -n ": "
+    read torrentServer
+    echo
+    echo "Please enter your Stream key: "
+    echo -n ": "
+    read streamKey
+    
+    function bitTorrentStore() {}
+        clear   
+        echo "Great!  Do you want to store these values at ~/.creek for future use? (Y/N)"
+        echo -n ": "
+        read bitTorrentStore
+
+        case $bitTorrentStore in
+            Y|y|Yes|yes|YES)
+                echo '$torrentServer $torrentServer' > ~/.creek
+                echo '$torrentServer $streamKey' >> ~/.creek
+                ;;
+            N|n|No|no|NO)
+                ;;
+            *)
+                echo  "That's not a valid option!"
+                read -p
+                bitTorrentStore
+                ;;
+        esac
+    }
+    bitTorrentStore
+
+    unset FFMPEG
+    if ! type -P ffmpeg; then
+        echo >&2 "Can't find ffmpeg.  Aborting."
+        exit 1
+    else
+        FFMPEG="$(type -P ffmpeg)"
+        export FFMPEG
+    fi
+
+    # Implement directory and file type check
+    # Should parse basename or directory here
+    for f in for f in $(ls *.mp4 | sort -r); do
+        $FFMPEG -re -i "$f" \
+            -c copy \
+            -f flv \
+            rtmp://'$torrentServer'/'$streamKey'
+    done
+    
+}
+
 menu (){
     clear
-    echo "There are two ways of streaming:"
+    echo "There are three ways of streaming:"
     echo "1)  Using Icecast, ffmpeg2theora, and oggfwd."
-    echo "2)  Using VLC."
+    echo "2)  Using VLC (i.e., http video)."
+    echo "3)  BitTorrent Live (i.e., RTMP Server)."
     echo 
     echo "Q)  Quit."
     echo 
@@ -196,6 +253,12 @@ menu (){
             echo -n "Not implemented yet.  Choose 1!"
             read
             menu ;;
+        3 )
+            echo -n "Not implemented yet.  Choose 1!"
+            read
+            menu
+            #bitTorrent
+            ;;
         Q|q|Quit|quit|exit )
             exit 1 ;;
         * )
@@ -206,5 +269,4 @@ menu (){
     wait 
     exit 1
 }
-
 menu
