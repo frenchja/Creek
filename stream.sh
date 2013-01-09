@@ -29,6 +29,13 @@ exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 
 # Doesn't work...
 # [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
+usage(){
+    echo "USAGE: ./stream.sh movie"
+}
+if [[ -z $MOVIE ]]; then
+    usage
+    exit 1
+fi
 
 clear
 echo "Your hostname appears to be $HOSTNAME."
