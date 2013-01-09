@@ -4,7 +4,6 @@
 #   ffmpeg2theora:  http://firefogg.org/nightly/
 #   icecast:  http://www.icecast.org/download.php
 #   oggfwd:  http://v2v.cc/~j/oggfwd/
-#   ffmpeg
 #
 # Copyright 2012 - 2013.
 #
@@ -27,13 +26,8 @@ HOSTNAME="$(hostname)"
 IP="$(curl http://automation.whatismyip.com/n09230945.asp)"
 exec 2>~/Desktop/"$(date +%Y-%m-%d)".log
 
-usage(){
-    echo "USAGE: ./stream.sh movie"
-}
-if [[ -z $MOVIE ]]; then
-    usage
-    exit 1
-fi
+# Doesn't work...
+# [ "$#" -eq 1 ] || { echo "You must provide a movie parameter after stream.sh!" 1>&2 && exit 0 }
 
 clear
 echo "Your hostname appears to be $HOSTNAME."
@@ -55,13 +49,6 @@ echo "What website do you want to include in the Metadata?"
 echo "This could be an IRC channel or forum..."
 echo -n ": "
 read WEBSITE
-
-function precheck (){
-    clear
-    icepid=$(pgrep icecast)
-    if icepid>/dev/null; then
-        echo "Icecast detected on startup" 1>&2;
-}
 
 function icepass (){
     clear
@@ -120,18 +107,17 @@ function vlc (){
 function ffmpeg (){
     icepass
    
-   # Find icecast
     if ! type -P icecast; then
-            echo >&2 "Can't find Icecast.  Aborting."
+            echo >&2 "Can't find icecast.  Aborting."
             exit 0
     else
             ICECAST="$(type -P icecast)"
             export ICECAST
      fi
+    
     $ICECAST -b -c /opt/local/etc/icecast.xml &
     icepid=$!
     
-    # Find ffmpeg2theora
     unamestr=`uname`
     if [[ "$unamestr" == 'Darwin' ]]; then
         if ! type -P ffmpeg2theora.macosx; then
@@ -151,7 +137,6 @@ function ffmpeg (){
         fi
     fi
 
-    # Find oggfwd
     if ! type -P oggfwd; then
         echo >&2 "Can't find oggfwd.  Aborting."
         exit 0
@@ -169,11 +154,6 @@ function ffmpeg (){
     echo "================================="
     echo
 
-    if [[ -d $MOVIE ]]; then
-        echo >&2 "Sorry, directory parsing isn't supported yet.  Aborting."
-        exit 0
-    fi
-    
     $FFMPEG "$MOVIE" \
         -a 0 \
         -v 6 \
@@ -192,7 +172,6 @@ function ffmpeg (){
     oggpid=$!
     
     wait
-    kill $oggpid
     kill $icepid
     pkill icecast
     
