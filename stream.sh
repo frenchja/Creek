@@ -38,7 +38,7 @@ fi
 
 clear
 echo "Your hostname appears to be $HOSTNAME."
-echo "Users will need to connect to this."
+echo "Users/Icecast will need to connect to this."
 echo ""
 echo -n "Is this correct?  (Y/N)"
 read yn
